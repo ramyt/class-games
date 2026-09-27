@@ -22,8 +22,8 @@
     { picture: 'penguin', team: 'Penguins', faces: 'right' },
     { picture: 'dog', team: 'Puppies', faces: 'right' }
   ];
-  const COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b'];
-  const LIGHT = ['#fde2e2', '#dbe8fe', '#d7f5e1', '#fdeccc'];
+  const COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];
+  const LIGHT = ['#fde2e2', '#dbe8fe', '#d7f5e1', '#fdeccc', '#ede4fe', '#fce1ef', '#d5f3f9', '#ecf8d4'];
   const OWN = '__own__';
 
   const T = (ICG.T = { CHARACTERS, COLORS, LIGHT, OWN });
@@ -42,10 +42,15 @@
 
   /* team names + characters are shared by all games (saved on this device) */
   T.loadTeams = function () {
-    const def = [0, 1, 2, 3].map(i => ({ char: CHARACTERS[i].picture, name: CHARACTERS[i].team }));
+    const def = [0, 1, 2, 3, 4, 5, 6, 7].map(i => ({ char: CHARACTERS[i].picture, name: CHARACTERS[i].team }));
     const old = (ICG.store.get('race.settings', {}) || {}).teams;
     const t = ICG.store.get('teams.list', null) || old;
-    return Array.isArray(t) && t.length >= 4 ? t : def;
+    if (!Array.isArray(t) || !t.length) return def;
+    // older saves had 4 teams: top up to 8 with unused characters
+    const out = t.slice(0, 8);
+    def.forEach(d => { if (out.length < 8 && !out.some(x => x.char === d.char)) out.push(d); });
+    CHARACTERS.forEach(c => { if (out.length < 8 && !out.some(x => x.char === c.picture)) out.push({ char: c.picture, name: c.team }); });
+    return out;
   };
   T.saveTeams = list => ICG.store.set('teams.list', list);
   T.makeTeams = function (list, n) {
@@ -74,7 +79,7 @@
   };
   // team chips: tap character to change it, tap name to rename
   T.teamChips = function (teams, n, changed) {
-    const box = h('div', { class: 'team-chips' });
+    const box = h('div', { class: 'team-chips' + (n > 4 ? ' many' : '') });
     const cls = ICG.classes.current(), g = cls ? ICG.classes.groups(cls, n) : null;
     for (let i = 0; i < n; i++) {
       const t = teams[i];

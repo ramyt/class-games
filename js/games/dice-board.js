@@ -43,7 +43,7 @@
     function render() {
       body.innerHTML = '';
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
-        T.seg([[2, '2'], [3, '3'], [4, '4']], s.nTeams, set('nTeams')),
+        T.seg([[2, '2'], [3, '3'], [4, '4'], [5, '5'], [6, '6'], [7, '7'], [8, '8']], s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Board'),
         T.seg([[20, 'Short'], [30, 'Medium'], [40, 'Long']], s.length, set('length'))));
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, ''), T.teamChips(s.teams, s.nTeams, () => { save(); render(); })));
@@ -105,7 +105,7 @@
       onclick: () => (st.moves && !st.over) ? ICG.confirm('Change settings?', 'This game will end.', 'Yes', showSetup) : showSetup() });
     root.append(
       ICG.topbar('Dice Board Game', { extra: [undoBtn, setupBtn], leaveCheck: () => st.moves && !st.over, wheel: T.wheelOpts(teams, () => st.turn) }),
-      board, h('div', { class: 'db-side' }, sb.el, panel));
+      board, h('div', { class: 'db-side' + (teams.length > 4 ? ' many' : '') }, sb.el, panel));
 
     /* ----- draw the board ----- */
     const W = 1100, H = 780, gap = 10;
@@ -132,9 +132,10 @@
       Object.keys(groups).forEach(sqi => {
         const g = groups[sqi], c = cell(+sqi);
         g.forEach((ti, k) => {
-          const offs = g.length === 1 ? [[.5, .58]] : g.length === 2 ? [[.3, .6], [.7, .6]] : [[.3, .45], [.7, .45], [.3, .8], [.7, .8]];
-          const o = offs[k] || [.5, .6];
-          const tk = tokens[ti], size = g.length === 1 ? TS : TS * .72;
+          // up to 8 pieces share a square: 1 / 2 side by side / 2x2 / 3x3 grid
+          const n = g.length, cols = n === 1 ? 1 : n <= 4 ? 2 : 3, rows = Math.ceil(n / cols);
+          const o = [(k % cols + .5) / cols, .22 + .72 * (Math.floor(k / cols) + .5) / rows];
+          const tk = tokens[ti], size = n === 1 ? TS : TS * (cols === 2 ? .72 : .5);
           tk.style.transition = animate ? 'left .22s, top .22s, width .2s, height .2s' : 'none';
           tk.style.width = tk.style.height = size + 'px';
           tk.style.left = (c.x + cw * o[0] - size / 2) + 'px';

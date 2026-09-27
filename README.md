@@ -36,7 +36,7 @@ full screen like an app, and works without internet after the first visit.
 | A or Space | Show answer |
 | U | Undo |
 
-Team Race: the team whose turn it is answers (no stealing). Tap Right or Wrong - the answer shows, then tap "Next question" (it names the next team). Keys: Y/1 = right, N/0 = wrong, Enter/Space = next question, U = undo.
+Team Race: 2 to 8 teams (Dice Board Game too; the other games 2 to 4). Team Race is played in ROUNDS: every team answers one question (a tick or cross shows on its lane), then "Move the teams!" moves everyone together. The starting team changes each round. If several teams reach the finish in the same round, they go back to the start for SUDDEN DEATH (up to 5 rounds; teams that fall behind are out; still level after 5 = a tie). Keys: Y/1 = right, N/0 = wrong, Enter/Space = next, U = undo.
 Team Race timer: Off / 10s / 15s / 20s. When time runs out the answer shows and the team gets no point. The timer pauses while the Pick wheel is open.
 
 Mystery Boxes: inside a box, 1-4 = team got it, 0/N = nobody, A = show answer.

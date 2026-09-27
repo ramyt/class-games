@@ -235,7 +235,7 @@
           const ed = C.teamsEditor(sel, nTeams, teams, () => render());
           right.append(h('div', { class: 'cl-teamrow' },
             h('span', { class: 'slabel', style: { width: 'auto' } }, 'Teams:'),
-            ICG.T.seg([[2, '2'], [3, '3'], [4, '4']], nTeams, v => { nTeams = v; render(); }),
+            ICG.T.seg([[2, '2'], [3, '3'], [4, '4'], [5, '5'], [6, '6'], [7, '7'], [8, '8']], nTeams, v => { nTeams = v; render(); }),
             h('button', { class: 'btn yellow', onclick: () => { S.drum(); ed.shuffle(); } }, 'Shuffle teams'),
             h('span', { class: 'small-note' }, 'Tap a name to move it')),
             ed.el);
