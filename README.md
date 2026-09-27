@@ -78,7 +78,7 @@ What's Missing?: Space = hide / show answer / next round, A = show answer, 1-4 =
 Save the Snowman: type a letter to call it, Enter = next word. In "Solve it!" type the word and press Enter.
 Its "Our spelling words" list is typed on the set-up screen (it can copy the Hot Seat list).
 
-Dice Board Game: Space/Enter = roll, Y = right answer, N = wrong, A = show answer, U = undo.
+Dice Board Game: the finish needs an EXACT roll (too high = stay put). Space/Enter = roll, Y = right answer, N = wrong, A = show answer, U = undo.
 Odd One Out: Space = show answer / next round, 1-4 = team +1, U = undo.
 Odd One Out "Harder" rounds are in packs/odd-one-out.js (one line each: 4 pictures | odd one | why).
 

@@ -631,3 +631,4 @@ div.chip { cursor: default; }
 .ranking .rank-row span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .win-top .win-char { max-width: 150px; }
 .win-top { flex-wrap: wrap; }
+.db-need { font-size: 28px; font-weight: 700; text-align: center; color: #fff; background: #5b5bd6; border-radius: 14px; padding: 6px 10px; animation: popIn .3s; }

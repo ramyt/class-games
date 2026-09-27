@@ -166,6 +166,8 @@
           h('button', { class: 'btn green', onclick: right }, st.phase === 'bonus' ? 'Right! +2' : 'Right!'),
           h('button', { class: 'btn red', onclick: wrong }, 'Wrong')));
       } else if (st.phase === 'roll') {
+        const need = N - st.pos[st.turn];
+        if (need <= 6) panel.append(h('div', { class: 'db-need' }, 'Need exactly ' + need + ' to finish!'));
         panel.append(dice, h('button', { class: 'btn big yellow db-roll', onclick: roll }, 'Roll!'));
       } else {
         panel.append(dice);
@@ -205,6 +207,15 @@
         drawDice(1 + Math.floor(Math.random() * 6)); S.tick();
         if (++k >= 12) {
           clearInterval(iv); drawDice(n); dice.classList.remove('rolling'); S.pop();
+          const need = N - st.pos[st.turn];
+          if (n > need) {
+            // the finish needs an exact roll: too many = stay where you are
+            panel.insertBefore(h('div', { class: 'db-msg big' }, 'You rolled ' + n + '!'), dice);
+            panel.insertBefore(h('div', { class: 'db-need' }, 'Too far! You need exactly ' + need + '. Stay here.'), dice);
+            S.nobody();
+            setTimeout(() => { st.busy = false; nextTeam(); }, 1800);
+            return;
+          }
           panel.insertBefore(h('div', { class: 'db-msg big' }, 'You rolled ' + n + '!'), dice);
           setTimeout(() => move(n, () => afterLand(false)), 600);
         }
