@@ -390,15 +390,19 @@
       const tie = ws.length > 1;
       const t = teams[ws[0]];
       let ranking = null;
-      if (!tugMode && teams.length > 2 && !tie) {
+      if (tie) {
+        // tied teams side by side (max 3 lines)
+        ranking = h('div', { class: 'ranking', style: ICG.rankCols(ws.length) }, ws.map(i =>
+          h('div', { class: 'rank-row', style: { boxShadow: 'inset 0 0 0 4px ' + teams[i].color } }, charImg(teams[i].char, 'right', 'mini'), h('span', null, teams[i].name))));
+      } else if (!tugMode && teams.length > 2) {
         const order = teams.map((tm, i) => ({ tm, i, p: st.pos[i] })).sort((a, b) => (ws.includes(b.i) - ws.includes(a.i)) || b.p - a.p);
-        ranking = h('div', { class: 'ranking' }, order.map((o, k) =>
+        ranking = h('div', { class: 'ranking', style: ICG.rankCols(order.length) }, order.map((o, k) =>
           h('div', { class: 'rank-row' }, h('b', null, (k + 1) + '.'), charImg(o.tm.char, 'right', 'mini'), h('span', null, o.tm.name))));
       }
       const m = ICG.modal([
-        h('div', { class: 'win-top' }, ICG.picture('trophy', 'images/app', 'win-trophy'), ws.map(i => charImg(teams[i].char, 'right', 'win-char'))),
+        h('div', { class: 'win-top' }, ICG.picture('trophy', 'images/app', 'win-trophy'), ws.length <= 3 ? ws.map(i => charImg(teams[i].char, 'right', 'win-char')) : null),
         h('h2', { style: { fontSize: '84px', margin: '6px 0 10px', color: tie ? 'var(--ink)' : t.color } },
-          tie ? "It's a tie! " + ws.map(i => teams[i].name).join(' & ') : t.name + ' win!'),
+          tie ? "It's a tie!" : t.name + ' win!'),
         ranking,
         h('div', { class: 'row', style: { marginTop: '26px' } },
           h('button', { class: 'btn big green', onclick: () => { m.close(); startGame(s); } }, 'Play again'),

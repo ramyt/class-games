@@ -26,6 +26,8 @@
   const LIGHT = ['#fde2e2', '#dbe8fe', '#d7f5e1', '#fdeccc', '#ede4fe', '#fce1ef', '#d5f3f9', '#ecf8d4'];
   const OWN = '__own__';
 
+  // winner-screen list: at most 3 lines (1 column up to 3 teams, 2 columns for 4, 3 columns for 5-8)
+  ICG.rankCols = n => ({ gridTemplateColumns: 'repeat(' + (n <= 3 ? 1 : n === 4 ? 2 : 3) + ', minmax(0, 1fr))', maxWidth: n <= 3 ? '640px' : n === 4 ? '900px' : '1260px' });
   const T = (ICG.T = { CHARACTERS, COLORS, LIGHT, OWN });
 
   T.charOf = id => CHARACTERS.find(c => c.picture === id) || CHARACTERS[0];
@@ -233,9 +235,9 @@
     const winners = teams.filter((t, i) => scores[i] === best);
     const order = teams.map((tm, i) => ({ tm, p: scores[i] })).sort((a, b) => b.p - a.p);
     const m = ICG.modal([
-      h('div', { class: 'win-top' }, ICG.picture('trophy', 'images/app', 'win-trophy'), winners.map(w => T.charImg(w.char, 'right', 'win-char'))),
+      h('div', { class: 'win-top' }, ICG.picture('trophy', 'images/app', 'win-trophy'), winners.length <= 3 ? winners.map(w => T.charImg(w.char, 'right', 'win-char')) : null),
       h('h2', { style: { fontSize: '80px', margin: '6px 0 10px', color: winners.length > 1 ? 'var(--ink)' : winners[0].color } }, winners.length > 1 ? "It's a tie!" : winners[0].name + ' win!'),
-      h('div', { class: 'ranking' }, order.map((o, k) =>
+      h('div', { class: 'ranking', style: ICG.rankCols(order.length) }, order.map((o, k) =>
         h('div', { class: 'rank-row' }, h('b', null, (k + 1) + '.'), T.charImg(o.tm.char, 'right', 'mini'), h('span', null, o.tm.name), h('span', { class: 'rp' }, o.p + (o.p === 1 ? (opts.unit || ' points').replace(/s$/, '') : (opts.unit || ' points')))))),
       h('div', { class: 'row', style: { marginTop: '24px' } },
         h('button', { class: 'btn big green', onclick: () => { m.close(); opts.again && opts.again(); } }, 'Play again'),
