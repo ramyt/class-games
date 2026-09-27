@@ -57,6 +57,11 @@ All pictures are in the **images** folder, named by the word (e.g. `cow.webp`).
 - Use pictures you made or ones with a free licence (e.g. Pixabay, Openclipart),
   because the website is public.
 
+## G3 Science questions
+`packs/science-g3.js` has 4 packs from the G3 Science book (Units 1-4). On a set-up screen tap
+**Choose questions...** - packs are grouped (General / G3 Science) with an All / None button per group.
+To add a pack to the G3 Science group, give it `group: 'G3 Science'`.
+
 ## Add your own questions
 Open **packs/my-questions.js** and follow the example inside. One question per line:
 

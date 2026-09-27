@@ -583,3 +583,9 @@ button.lane-tag { border: none; cursor: pointer; }
 .rt-next-sub { display: flex; align-items: center; gap: 8px; font-size: 28px; opacity: .95; }
 .rt-next-sub .mini { width: 40px; height: 40px; }
 .rt-judge .btn { white-space: nowrap; font-size: 38px; padding: 0 10px; }
+.packs-modal { max-height: 600px; overflow: auto; display: flex; flex-direction: column; gap: 10px; }
+.pm-head { display: flex; align-items: center; gap: 16px; font-size: 30px; font-weight: 700; color: var(--muted); margin-top: 8px; }
+.pm-head .chip { font-size: 22px; padding: 4px 14px; }
+.packs-modal .chip { font-size: 28px; }
+.chip.pick-packs { background: #fff4cc; color: #7a5b00; border-color: #e0a800; }
+div.chip { cursor: default; }

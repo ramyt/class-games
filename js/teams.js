@@ -100,20 +100,55 @@
     packs = packs.filter(p => p === OWN || ICG.packs.some(k => k.id === p));
     return packs.length ? packs : [OWN];
   };
+  // setup row: a short summary of the chosen packs + a "Choose" button that opens all packs by group
   T.packChips = function (s, changed) {
-    const chips = h('div', { class: 'pack-chips' });
-    ICG.packs.forEach(p => {
-      const on = s.packs.includes(p.id);
-      chips.append(h('button', { class: 'chip' + (on ? ' on' : ''), onclick: () => {
-        s.packs = s.packs.filter(x => x !== OWN);
-        if (on) s.packs = s.packs.filter(x => x !== p.id); else s.packs.push(p.id);
-        if (!s.packs.length) s.packs = [OWN];
-        changed();
-      } }, p.picture ? ICG.picture(p.picture) : null, p.title));
-    });
-    chips.append(h('button', { class: 'chip own' + (s.packs.includes(OWN) ? ' on' : ''), onclick: () => { s.packs = [OWN]; changed(); } },
-      ICG.picture('megaphone', 'images/app'), 'I ask my own questions'));
-    return chips;
+    const chosen = ICG.packs.filter(p => s.packs.includes(p.id));
+    const own = s.packs.includes(OWN);
+    const row = h('div', { class: 'pack-chips' });
+    if (own) row.append(h('div', { class: 'chip own on' }, ICG.picture('megaphone', 'images/app'), 'I ask my own questions'));
+    else {
+      chosen.slice(0, 3).forEach(p => row.append(h('div', { class: 'chip on' }, p.picture ? ICG.picture(p.picture) : null, p.title)));
+      if (chosen.length > 3) row.append(h('div', { class: 'chip on' }, '+' + (chosen.length - 3) + ' more'));
+    }
+    row.append(h('button', { class: 'chip pick-packs', onclick: () => T.choosePacks(s, changed) }, 'Choose questions...'));
+    return row;
+  };
+  T.choosePacks = function (s, changed) {
+    const body = h('div', { class: 'packs-modal' });
+    const groups = [];
+    ICG.packs.forEach(p => { if (!groups.includes(p.group)) groups.push(p.group); });
+    function render() {
+      body.innerHTML = '';
+      groups.forEach(g => {
+        const list = ICG.packs.filter(p => p.group === g);
+        const allOn = list.every(p => s.packs.includes(p.id));
+        body.append(h('div', { class: 'pm-head' }, h('span', null, g),
+          h('button', { class: 'chip', onclick: () => {
+            s.packs = s.packs.filter(x => x !== OWN);
+            if (allOn) s.packs = s.packs.filter(x => !list.some(p => p.id === x));
+            else list.forEach(p => { if (!s.packs.includes(p.id)) s.packs.push(p.id); });
+            if (!s.packs.length) s.packs = [OWN];
+            render();
+          } }, allOn ? 'None' : 'All')));
+        body.append(h('div', { class: 'pack-chips' }, list.map(p => {
+          const on = s.packs.includes(p.id);
+          return h('button', { class: 'chip' + (on ? ' on' : ''), onclick: () => {
+            s.packs = s.packs.filter(x => x !== OWN);
+            if (on) s.packs = s.packs.filter(x => x !== p.id); else s.packs.push(p.id);
+            if (!s.packs.length) s.packs = [OWN];
+            render();
+          } }, p.picture ? ICG.picture(p.picture) : null, p.title + ' (' + p.questions.length + ')');
+        })));
+      });
+      body.append(h('div', { class: 'pm-head' }, h('span', null, 'No question list')));
+      body.append(h('div', { class: 'pack-chips' }, h('button', { class: 'chip own' + (s.packs.includes(OWN) ? ' on' : ''), onclick: () => { s.packs = [OWN]; render(); } },
+        ICG.picture('megaphone', 'images/app'), 'I ask my own questions')));
+    }
+    const m = ICG.modal([h('h2', null, 'Choose questions'), body,
+      h('div', { class: 'row', style: { marginTop: '20px' } }, h('button', { class: 'btn big green', onclick: () => m.close() }, 'Done'))],
+      { onClose: changed });
+    m.box.style.width = '1450px';
+    render();
   };
   T.buildDeck = function (s) {
     if (s.packs.includes(OWN)) return [];

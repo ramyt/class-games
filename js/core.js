@@ -92,7 +92,7 @@
       if (!q) return;
       qs.push({ q, a: a || '', pic: pic || '', level });
     });
-    ICG.packs.push({ id: p.id || p.title, title: p.title || 'Questions', picture: p.picture || '', questions: qs });
+    ICG.packs.push({ id: p.id || p.title, title: p.title || 'Questions', picture: p.picture || '', group: p.group || 'General', questions: qs });
   };
 
   /* ---------- picture sets (for picture games) ----------
