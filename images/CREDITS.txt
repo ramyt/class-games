@@ -1,0 +1,7 @@
+Built-in pictures (*.webp) in this folder and its sub-folders come from
+Noto Emoji by Google - https://github.com/googlefonts/noto-emoji
+Licensed under the Apache License, Version 2.0:
+https://www.apache.org/licenses/LICENSE-2.0
+(resized to 256 x 256 and saved as .webp)
+
+Pictures you add yourself (.png / .jpg) belong to you or their owners.
