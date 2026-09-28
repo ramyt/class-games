@@ -20,7 +20,17 @@
     { picture: 'snail', team: 'Snails', faces: 'left' },
     { picture: 'horse', team: 'Horses', faces: 'left' },
     { picture: 'penguin', team: 'Penguins', faces: 'right' },
-    { picture: 'panda', team: 'Pandas', faces: 'right' }
+    { picture: 'panda', team: 'Pandas', faces: 'right' },
+    { picture: 'motorcycle', team: 'Riders', faces: 'right' },
+    { picture: 'sailboat', team: 'Sailors', faces: 'right' },
+    { picture: 'shark', team: 'Sharks', faces: 'up-right' },
+    { picture: 'helicopter', team: 'Avengers', faces: 'right' },
+    { picture: 'airplane', team: 'Pilots', faces: 'left' },
+    { picture: 'camel', team: 'Nomads', faces: 'left' },
+    { picture: 'computer', team: 'Geeks', faces: 'left' },
+    { picture: 'guitar', team: 'Musicians', faces: 'left' },
+    { picture: 'drum', team: 'Drummers', faces: 'right' },
+    { picture: 'robot', team: 'Robots', faces: 'right' }
   ];
   const COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];
   const LIGHT = ['#fde2e2', '#dbe8fe', '#d7f5e1', '#fdeccc', '#ede4fe', '#fce1ef', '#d5f3f9', '#ecf8d4'];
