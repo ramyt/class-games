@@ -6,7 +6,8 @@
   const ICG = window.ICG, h = ICG.h, S = ICG.sound;
 
   /* ----- The characters teams can choose -----
-     picture : file name in images/characters/  (swap with your own .png/.jpg of the same name)
+     picture : file name in images/characters/ - or in the main images/ folder
+               (swap with your own .png/.jpg of the same name)
      team    : the team name it starts with
      faces   : which way the picture looks: 'left', 'right' or 'up-right'
                (so the games can turn it the right way) */
@@ -19,17 +20,17 @@
     { picture: 't-rex', team: 'Dinos', faces: 'left' },
     { picture: 'snail', team: 'Snails', faces: 'left' },
     { picture: 'horse', team: 'Horses', faces: 'left' },
-    { picture: 'penguin', team: 'Penguins', faces: 'right' },
+    { picture: 'penguin', team: 'Penguins', faces: 'left' },
     { picture: 'panda', team: 'Pandas', faces: 'right' },
-    { picture: 'motorcycle', team: 'Riders', faces: 'right' },
-    { picture: 'sailboat', team: 'Sailors', faces: 'right' },
-    { picture: 'shark', team: 'Sharks', faces: 'up-right' },
-    { picture: 'helicopter', team: 'Avengers', faces: 'right' },
-    { picture: 'airplane', team: 'Pilots', faces: 'left' },
+    { picture: 'motorcycle', team: 'Riders', faces: 'left' },
+    { picture: 'sailboat', team: 'Sailors', faces: 'left' },
+    { picture: 'shark', team: 'Sharks', faces: 'left' },
+    { picture: 'helicopter', team: 'Avengers', faces: 'left' },
+    { picture: 'airplane', team: 'Pilots', faces: 'up-right' },
     { picture: 'camel', team: 'Nomads', faces: 'left' },
     { picture: 'computer', team: 'Geeks', faces: 'left' },
-    { picture: 'guitar', team: 'Musicians', faces: 'left' },
-    { picture: 'drum', team: 'Drummers', faces: 'right' },
+    { picture: 'guitar', team: 'Musicians', faces: 'right' },
+    { picture: 'drum', team: 'Drummers', faces: 'up-right' },
     { picture: 'robot', team: 'Robots', faces: 'right' }
   ];
   const COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];

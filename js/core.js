@@ -60,15 +60,20 @@
      So to swap a picture, just drop your own cow.png or cow.jpg into the images folder. */
   const EXTS = ['png', 'jpg', 'jpeg', 'webp'];
   const found = {};
+  // folder can be one folder or a list: the first one that has the picture wins
+  // (team characters: images/characters first, then the main images folder)
   ICG.picture = function (name, folder, cls) {
-    folder = folder || 'images';
+    const folders = [].concat(folder || 'images');
+    if (folders[0] === 'images/characters' && folders.length === 1) folders.push('images');
     const img = h('img', { class: cls || '', alt: name, draggable: 'false' });
-    const key = folder + '/' + name;
+    const key = folders.join('+') + '/' + name;
     if (found[key]) { img.src = found[key]; return img; }
+    const tries = [];
+    folders.forEach(f => EXTS.forEach(e => tries.push(f + '/' + name + '.' + e)));
     let i = 0;
     const tryNext = () => {
-      if (i >= EXTS.length) { img.style.visibility = 'hidden'; return; }
-      img.src = key + '.' + EXTS[i++];
+      if (i >= tries.length) { img.style.visibility = 'hidden'; return; }
+      img.src = tries[i++];
     };
     img.onerror = tryNext;
     img.onload = () => { found[key] = img.src; img.onerror = null; };
