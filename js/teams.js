@@ -15,12 +15,12 @@
     { picture: 'turtle', team: 'Turtles', faces: 'left' },
     { picture: 'rocket', team: 'Rockets', faces: 'up-right' },
     { picture: 'racing-car', team: 'Racers', faces: 'right' },
-    { picture: 'unicorn', team: 'Unicorns', faces: 'left' },
+    { picture: 'lion', team: 'Lions', faces: 'left' },
     { picture: 't-rex', team: 'Dinos', faces: 'left' },
     { picture: 'snail', team: 'Snails', faces: 'left' },
     { picture: 'horse', team: 'Horses', faces: 'left' },
     { picture: 'penguin', team: 'Penguins', faces: 'right' },
-    { picture: 'dog', team: 'Puppies', faces: 'right' }
+    { picture: 'panda', team: 'Pandas', faces: 'right' }
   ];
   const COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];
   const LIGHT = ['#fde2e2', '#dbe8fe', '#d7f5e1', '#fdeccc', '#ede4fe', '#fce1ef', '#d5f3f9', '#ecf8d4'];
