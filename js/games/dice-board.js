@@ -42,7 +42,7 @@
     const set = k => v => { s[k] = v; save(); render(); };
     function render() {
       body.innerHTML = '';
-      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
+      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, T.studentMode() ? 'Players' : 'Teams'),
         T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Board'),
         T.seg([[20, 'Short'], [30, 'Medium'], [40, 'Long']], s.length, set('length'))));

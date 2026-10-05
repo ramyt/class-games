@@ -43,7 +43,7 @@
     const set = k => v => { s[k] = v; save(); render(); };
     function render() {
       body.innerHTML = '';
-      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
+      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, T.studentMode() ? 'Players' : 'Teams'),
         T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Tiles'),
         T.seg([[3, '9'], [4, '16'], [5, '25']], s.grid, set('grid')),

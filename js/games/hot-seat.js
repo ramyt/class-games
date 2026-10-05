@@ -56,7 +56,7 @@
     }
     function render() {
       body.innerHTML = '';
-      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
+      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, T.studentMode() ? 'Players' : 'Teams'),
         T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Time'),
         T.seg([[30, '30s'], [60, '60s'], [90, '90s']], s.time, set('time')),

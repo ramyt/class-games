@@ -60,7 +60,7 @@
     const set = (k) => v => { s[k] = v; save(); render(); };
     function render() {
       body.innerHTML = '';
-      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
+      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, T.studentMode() ? 'Players' : 'Teams'),
         T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '40px' } }, 'Boxes'),
         T.seg([[12, '12'], [16, '16'], [20, '20']], s.boxes, set('boxes'))));

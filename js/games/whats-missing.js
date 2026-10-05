@@ -40,7 +40,7 @@
     const lab = (t, ml) => h('div', { class: 'slabel', style: { width: 'auto', marginLeft: (ml || 30) + 'px' } }, t);
     function render() {
       body.innerHTML = '';
-      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
+      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, T.studentMode() ? 'Players' : 'Teams'),
         T.teamSeg(s.nTeams, set('nTeams')),
         lab('Rounds'), T.seg([[5, '5'], [8, '8'], [10, '10']], s.rounds, set('rounds'))));
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, ''), T.teamChips(s.teams, s.nTeams, () => { save(); render(); })));

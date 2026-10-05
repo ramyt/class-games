@@ -649,3 +649,4 @@ div.chip { cursor: default; }
 .box-modal .award-grid.many .award { min-height: 70px !important; font-size: 25px !important; }
 .wm-panel .award-grid.many .award b, .oo-panel .award-grid.many .award b, .rv-panel .award-grid.many .award b { display: none; }
 .name-btn { cursor: default; }
+.cl-name-chip.picked { background: #22b35e; color: #fff; }

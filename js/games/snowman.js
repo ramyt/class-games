@@ -66,7 +66,7 @@
     function render() {
       body.innerHTML = '';
       const words = ownWords();
-      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
+      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, T.studentMode() ? 'Players' : 'Teams'),
         T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Words'),
         T.seg([[3, '3'], [5, '5'], [8, '8']], s.words, set('words'))));

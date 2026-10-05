@@ -46,12 +46,12 @@
       // Row: game type
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Game'),
         seg([['race', 'Race'], ['tug', 'Tug of War']], s.mode, v => { s.mode = v; }),
-        h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Teams'),
+        h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, T.studentMode() ? 'Players' : 'Teams'),
         s.mode === 'tug' ? h('div', { class: 'small-note' }, '2 teams') : T.teamSeg(s.nTeams, v => { s.nTeams = v; save(); render(); })));
       // Row: teams
       const teamBox = T.teamChips(s.teams, s.nTeams, () => { save(); render(); });
       body.append(T.classRow(s.nTeams, s.teams, () => { save(); render(); }));
-      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'), teamBox));
+      body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, T.studentMode() ? 'Players' : 'Teams'), teamBox));
       body.append(T.teamHint());
       // Row: questions
       const chips = T.packChips(s, () => { save(); render(); });

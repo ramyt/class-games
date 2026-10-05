@@ -74,9 +74,50 @@
   T.studentMode = () => ICG.store.get('play.mode', 'teams') === 'students' && !!ICG.classes.current();
   T.setMode = m => ICG.store.set('play.mode', m);
   const charKey = () => 'students.chars.' + ((ICG.classes.current() || {}).name || '');
+  // who plays this round: the students the teacher chose (saved per class),
+  // or everyone here today when that is 8 or fewer and nobody was chosen
+  const pickKey = () => 'students.pick.' + ((ICG.classes.current() || {}).name || '');
+  T.presentStudents = () => { const cls = ICG.classes.current(); return cls ? ICG.classes.present(cls) : []; };
+  T.chosenNames = function () {
+    const here = T.presentStudents();
+    const picked = (ICG.store.get(pickKey(), []) || []).filter(n => here.includes(n));
+    if (picked.length) return picked.slice(0, T.MAX);
+    return here.length <= T.MAX ? here : [];
+  };
+  T.choosePlayers = function (changed) {
+    const here = T.presentStudents();
+    let sel = T.chosenNames().slice();
+    const count = h('div', { class: 'small-note', style: { fontSize: '28px', fontWeight: 700 } });
+    const box = h('div', { class: 'cl-names', style: { maxHeight: '420px' } });
+    function render() {
+      box.innerHTML = '';
+      here.forEach(nm => box.append(h('button', { class: 'cl-name-chip' + (sel.includes(nm) ? ' picked' : ' away'), onclick: () => {
+        if (sel.includes(nm)) sel = sel.filter(x => x !== nm);
+        else if (sel.length >= T.MAX) { ICG.toast('Up to ' + T.MAX + ' players'); return; }
+        else sel.push(nm);
+        S.pop(); render();
+      } }, nm)));
+      count.textContent = sel.length + ' of ' + here.length + ' chosen (2 to ' + T.MAX + ')';
+    }
+    const m = ICG.modal([
+      h('h2', null, 'Who is playing?'),
+      h('p', { style: { marginBottom: '12px' } }, 'Tap names to choose up to ' + T.MAX + ' players. Absent students are not shown.'),
+      count, h('div', { style: { height: '10px' } }), box,
+      h('div', { class: 'row', style: { marginTop: '20px' } },
+        here.length <= T.MAX ? h('button', { class: 'btn white', onclick: () => { sel = here.slice(); render(); } }, 'Everyone') : null,
+        h('button', { class: 'btn white', onclick: () => { sel = ICG.shuffle(here).slice(0, T.MAX); S.drum(); render(); } }, 'Random ' + Math.min(T.MAX, here.length)),
+        h('button', { class: 'btn white', onclick: () => { sel = []; render(); } }, 'Clear'),
+        h('button', { class: 'btn green', onclick: () => {
+          if (sel.length < 2) { ICG.toast('Choose at least 2 players'); return; }
+          ICG.store.set(pickKey(), sel); m.close(); changed && changed();
+        } }, 'Done'))
+    ], { sticky: true });
+    m.box.style.width = '1300px';
+    render();
+  };
   T.studentList = function () {
     const cls = ICG.classes.current(); if (!cls) return [];
-    const names = ICG.classes.present(cls);
+    const names = T.chosenNames();
     const saved = ICG.store.get(charKey(), {});
     const used = [];
     return names.map((nm, i) => {
@@ -92,9 +133,11 @@
   // the "how many teams" buttons: 2 to max, or the student count in Students mode
   T.teamSeg = function (value, onPick, max) {
     if (T.studentMode()) {
-      const n = T.studentList().length;
-      return h('div', { class: 'small-note', style: { textAlign: 'left', fontWeight: 700, color: n > T.MAX ? 'var(--bad)' : '' } },
-        n > T.MAX ? n + ' students - too many (max ' + T.MAX + '). Use Teams.' : n + ' players');
+      const n = T.studentList().length, here = T.presentStudents().length;
+      return h('div', { style: { display: 'flex', flexWrap: 'nowrap', gap: '12px', alignItems: 'center' } },
+        h('div', { class: 'small-note', style: { textAlign: 'left', fontWeight: 700, whiteSpace: 'nowrap', color: n < 2 ? 'var(--bad)' : '' } },
+          n < 2 ? here + ' here - choose up to ' + T.MAX : n + ' of ' + here + ' playing'),
+        h('button', { class: 'chip pick-packs', onclick: () => T.choosePlayers(() => { const f = T._changed; f && f(); }) }, 'Choose players...'));
     }
     const opts = []; for (let k = 2; k <= (max || T.MAX); k++) opts.push([k, String(k)]);
     return T.seg(opts, value, onPick);
@@ -102,9 +145,10 @@
   T.studentsOk = function () {
     if (!T.studentMode()) return true;
     const n = T.studentList().length;
-    if (n < 2) { ICG.toast('Students mode needs at least 2 students here today'); return false; }
-    if (n > T.MAX) { ICG.toast(n + ' students is too many for Students mode (max ' + T.MAX + '). Use Teams.'); return false; }
-    return true;
+    if (n >= 2) return true;
+    if (T.presentStudents().length < 2) { ICG.toast('Students mode needs at least 2 students here today'); return false; }
+    ICG.toast('Choose who is playing first'); T.choosePlayers(() => { const f = T._changed; f && f(); });
+    return false;
   };
   T.makeTeams = function (list, n) {
     if (T.studentMode()) return T.studentList().slice(0, T.MAX).map((t, i) => ({ char: t.char, name: t.name, student: true, color: COLORS[i % COLORS.length], light: LIGHT[i % LIGHT.length], members: [], out: [] }));
@@ -148,6 +192,7 @@
   };
   // team chips: tap character to change it, tap name to rename
   T.teamChips = function (teams, n, changed) {
+    T._changed = changed;
     if (T.studentMode()) {
       const list = T.studentList();
       const sbox = h('div', { class: 'team-chips' + (list.length > 4 ? ' many' : '') });
