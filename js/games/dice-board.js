@@ -43,7 +43,7 @@
     function render() {
       body.innerHTML = '';
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
-        T.seg([[2, '2'], [3, '3'], [4, '4'], [5, '5'], [6, '6'], [7, '7'], [8, '8']], s.nTeams, set('nTeams')),
+        T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Board'),
         T.seg([[20, 'Short'], [30, 'Medium'], [40, 'Long']], s.length, set('length'))));
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, ''), T.teamChips(s.teams, s.nTeams, () => { save(); render(); })));
@@ -87,6 +87,7 @@
 
   /* ======================= GAME ======================= */
   function startGame(s) {
+    if (!T.studentsOk()) return;
     cleanup();
     const teams = T.makeTeams(s.teams, s.nTeams);
     const deck = T.deck(s);

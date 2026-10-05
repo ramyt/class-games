@@ -41,7 +41,7 @@
     function render() {
       body.innerHTML = '';
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
-        T.seg([[2, '2'], [3, '3'], [4, '4']], s.nTeams, set('nTeams')),
+        T.teamSeg(s.nTeams, set('nTeams')),
         lab('Rounds'), T.seg([[5, '5'], [8, '8'], [10, '10']], s.rounds, set('rounds'))));
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, ''), T.teamChips(s.teams, s.nTeams, () => { save(); render(); })));
       body.append(T.classRow(s.nTeams, s.teams, () => { save(); render(); }));
@@ -70,6 +70,7 @@
 
   /* ======================= GAME ======================= */
   function startGame(s) {
+    if (!T.studentsOk()) return;
     cleanup();
     const teams = T.makeTeams(s.teams, s.nTeams);
     let pool = [];
@@ -155,7 +156,7 @@
       panel.innerHTML = '';
       panel.append(roundLbl(), turnPill(),
         h('div', { class: 'wm-say' }, s.missing > 1 ? 'What are the 2 missing things?' : "What's missing?"),
-        h('div', { class: 'small-note' }, ICG.possessive(teams[st.turn].name) + ' answer first. Then the other teams can try.'),
+        h('div', { class: 'small-note' }, ICG.possessive(teams[st.turn].name) + ' turn first. Then the others can try.'),
         h('button', { class: 'btn big yellow', style: { marginTop: 'auto' }, onclick: showAnswer }, 'Show answer'));
       setKeys({ a: showAnswer, space: showAnswer });
     }

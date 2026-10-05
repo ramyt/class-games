@@ -16,7 +16,7 @@ addPictures({ id: 'animals', group: 'animals', title: 'Animals', picture: 'lion'
   cow, pig=pig/piggy, horse=horse/pony, sheep=sheep/lamb, chicken=chicken/hen, duck, frog, fish, whale, dolphin,
   octopus, crab, snake, crocodile=crocodile/alligator, bird, owl, penguin, bee=bee/honeybee, butterfly, ant,
   snail, spider, bear=bear/teddy bear, panda, koala, kangaroo, camel, mouse=mouse/rat, dinosaur, t-rex=T. rex/dinosaur/trex,
-  unicorn, bat, shark
+  unicorn, bat, shark, hedgehog, flamingo
 `});
 
 addPictures({ id: 'food', group: 'food', title: 'Food', picture: 'pizza', words: `
@@ -35,12 +35,15 @@ addPictures({ id: 'things', title: 'Things', picture: 'backpack', words: `
   book, pencil, scissors, backpack=school bag/bag/backpack, clock=clock/alarm clock, football=ball/football/soccer ball, basketball=basketball/ball, balloon, gift=present/gift/box, umbrella,
   key, glasses, cap=cap/hat, t-shirt=T-shirt/shirt/tshirt, dress, shoe=shoe/shoes/sneaker, socks=socks/sock, crown, bell, guitar,
   drum, phone=phone/mobile phone/smartphone, computer=computer/laptop, television=TV/television, camera, light-bulb=light bulb/bulb/light, chair, bed, door, house=house/home,
-  teddy-bear=teddy bear/teddy/bear, kite, robot, magnet, toothbrush, ruler, crayon=crayon/pencil
+  teddy-bear=teddy bear/teddy/bear, kite, robot, magnet, toothbrush, ruler, crayon=crayon/pencil,
+  heart, cup=cup/mug, spoon, top-hat=hat/top hat, handbag=bag/handbag/purse, lollipop=lollipop/candy, watch=watch/clock, box=box/parcel/package,
+  candle, boot=boot/boots/shoe, microscope, telescope, hourglass=hourglass/sand timer/timer, compass, thermometer,
+  trumpet, violin, parachute, skateboard, tent, anchor, ladder
 `});
 
 addPictures({ id: 'nature', group: 'nature and weather', title: 'Nature & Weather', picture: 'rainbow', words: `
   sun, moon, star, cloud, rain=rain/rainy/raining/cloud, snowman, rainbow, lightning=lightning/thunder/storm, snowflake=snowflake/snow, fire,
-  tree, sunflower=flower/sunflower, rose=rose/flower, leaf, cactus, mountain, volcano, earth=earth/world/globe, mushroom
+  tree, sunflower=flower/sunflower, rose=rose/flower, tulip=flower/tulip, leaf, cactus, mountain, volcano, earth=earth/world/globe, mushroom
 `});
 
 addPictures({ id: 'feelings', group: 'feelings', title: 'Feelings', picture: 'happy', words: `

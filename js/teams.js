@@ -66,7 +66,48 @@
     return out;
   };
   T.saveTeams = list => ICG.store.set('teams.list', list);
+  /* ---------- play as Teams or as single Students ----------
+     Students mode: every student of the class in use who is here today
+     plays on their own (up to 8). Characters are handed out from the list
+     above and can be changed per student (saved on this device). */
+  T.MAX = 8;
+  T.studentMode = () => ICG.store.get('play.mode', 'teams') === 'students' && !!ICG.classes.current();
+  T.setMode = m => ICG.store.set('play.mode', m);
+  const charKey = () => 'students.chars.' + ((ICG.classes.current() || {}).name || '');
+  T.studentList = function () {
+    const cls = ICG.classes.current(); if (!cls) return [];
+    const names = ICG.classes.present(cls);
+    const saved = ICG.store.get(charKey(), {});
+    const used = [];
+    return names.map((nm, i) => {
+      let ch = saved[nm];
+      if (!ch || used.includes(ch)) ch = (CHARACTERS.find(c => !used.includes(c.picture)) || CHARACTERS[i % CHARACTERS.length]).picture;
+      used.push(ch);
+      return { char: ch, name: nm, student: true };
+    });
+  };
+  T.setStudentChar = (name, ch) => { const m = ICG.store.get(charKey(), {}); m[name] = ch; ICG.store.set(charKey(), m); };
+  // "Rabbits win!" / "Mint wins!"
+  T.winText = t => t.name + (t.student ? ' wins!' : ' win!');
+  // the "how many teams" buttons: 2 to max, or the student count in Students mode
+  T.teamSeg = function (value, onPick, max) {
+    if (T.studentMode()) {
+      const n = T.studentList().length;
+      return h('div', { class: 'small-note', style: { textAlign: 'left', fontWeight: 700, color: n > T.MAX ? 'var(--bad)' : '' } },
+        n > T.MAX ? n + ' students - too many (max ' + T.MAX + '). Use Teams.' : n + ' players');
+    }
+    const opts = []; for (let k = 2; k <= (max || T.MAX); k++) opts.push([k, String(k)]);
+    return T.seg(opts, value, onPick);
+  };
+  T.studentsOk = function () {
+    if (!T.studentMode()) return true;
+    const n = T.studentList().length;
+    if (n < 2) { ICG.toast('Students mode needs at least 2 students here today'); return false; }
+    if (n > T.MAX) { ICG.toast(n + ' students is too many for Students mode (max ' + T.MAX + '). Use Teams.'); return false; }
+    return true;
+  };
   T.makeTeams = function (list, n) {
+    if (T.studentMode()) return T.studentList().slice(0, T.MAX).map((t, i) => ({ char: t.char, name: t.name, student: true, color: COLORS[i % COLORS.length], light: LIGHT[i % LIGHT.length], members: [], out: [] }));
     const cls = ICG.classes.current();
     const g = cls ? ICG.classes.groups(cls, n) : null;
     return list.slice(0, n).map((t, i) => ({ char: t.char, name: t.name, color: COLORS[i], light: LIGHT[i], members: g ? g[i] : [], out: [] }));
@@ -84,6 +125,21 @@
       h('button', { class: 'chip', onclick: () => ICG.classes.picker(changed) }, 'Change'),
       cls ? h('button', { class: 'chip', onclick: () => ICG.classes.openTeams(n, T.makeTeams(teamList, n), changed) }, "Who's in each team?") : null);
   };
+  T.classRow = (function (orig) {
+    return function (n, teamList, changed) {
+      const row = T.studentMode()
+        ? h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Class'),
+            h('button', { class: 'chip on', onclick: () => ICG.classes.picker(changed) }, ICG.classes.current().name + ' (' + ICG.classes.present(ICG.classes.current()).length + ' here)'),
+            h('button', { class: 'chip', onclick: () => ICG.classes.picker(changed) }, 'Change'))
+        : orig(n, teamList, changed);
+      const cls = ICG.classes.current();
+      const mode = T.studentMode() ? 'students' : 'teams';
+      row.append(h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '24px' } }, 'Play as'),
+        cls ? T.seg([['teams', 'Teams'], ['students', 'Students']], mode, v => { T.setMode(v); changed(); })
+            : h('div', { class: 'seg' }, h('button', { class: 'on' }, 'Teams'), h('button', { class: 'off', onclick: () => ICG.toast('Choose a class first to play as students') }, 'Students')));
+      return row;
+    };
+  })(T.classRow);
 
   /* ---------- setup-screen pieces ---------- */
   T.seg = function (options, value, onPick) {
@@ -92,6 +148,21 @@
   };
   // team chips: tap character to change it, tap name to rename
   T.teamChips = function (teams, n, changed) {
+    if (T.studentMode()) {
+      const list = T.studentList();
+      const sbox = h('div', { class: 'team-chips' + (list.length > 4 ? ' many' : '') });
+      list.slice(0, T.MAX).forEach((t, i) => {
+        sbox.append(h('div', { class: 'team-chip', style: { borderColor: COLORS[i % 8], background: LIGHT[i % 8] } },
+          h('button', { class: 'char-btn', title: 'Change character', onclick: () => {
+            const used = list.map(x => x.char);
+            let k = CHARACTERS.findIndex(c => c.picture === t.char);
+            for (let m = 0; m < CHARACTERS.length; m++) { k = (k + 1) % CHARACTERS.length; if (!used.includes(CHARACTERS[k].picture)) break; }
+            T.setStudentChar(t.name, CHARACTERS[k].picture); changed();
+          } }, T.charImg(t.char, 'right')),
+          h('span', { class: 'name-btn' }, t.name)));
+      });
+      return sbox;
+    }
     const box = h('div', { class: 'team-chips' + (n > 4 ? ' many' : '') });
     const cls = ICG.classes.current(), g = cls ? ICG.classes.groups(cls, n) : null;
     for (let i = 0; i < n; i++) {
@@ -110,7 +181,7 @@
     }
     return box;
   };
-  T.teamHint = () => h('div', { class: 'small-note', style: { textAlign: 'left', margin: '-6px 0 0 232px', fontSize: '22px' } }, 'Tap a character to change it. Tap a name to rename the team.');
+  T.teamHint = () => T.studentMode() ? h('div', { class: 'small-note', style: { textAlign: 'left', margin: '-6px 0 0 232px', fontSize: '22px' } }, 'Each student plays alone. Tap a character to change it. Absent students: Classes & teams.') : h('div', { class: 'small-note', style: { textAlign: 'left', margin: '-6px 0 0 232px', fontSize: '22px' } }, 'Tap a character to change it. Tap a name to rename the team.');
 
   // question pack chips. s.packs = list of pack ids (or [OWN])
   T.cleanPacks = function (packs) {
@@ -212,7 +283,7 @@
     opts = opts || {};
     return h('div', { class: 'award-box' },
       h('div', { class: 'who' }, opts.label || 'Who got it right?'),
-      h('div', { class: 'award-grid n' + teams.length },
+      h('div', { class: 'award-grid n' + teams.length + (teams.length > 4 ? ' many' : '') },
         teams.map((tm, i) => h('button', { class: 'award', style: { background: tm.color }, onclick: () => onTeam(i) },
           T.charImg(tm.char, 'right', 'mini'), h('span', null, tm.name), opts.plus === false ? null : h('b', null, opts.plus || '+1')))),
       onNobody ? h('button', { class: 'btn grey nobody', onclick: onNobody }, opts.nobody || 'Nobody - next question') : null);
@@ -226,7 +297,7 @@
         T.charImg(t.char, 'right', 'sb-char'), h('div', { class: 'sb-name' }, t.name), val);
       return { row, val };
     });
-    const el = h('div', { class: 'scoreboard' }, rows.map(r => r.row));
+    const el = h('div', { class: 'scoreboard' + (teams.length > 4 ? ' many' : '') }, rows.map(r => r.row));
     return {
       el,
       update(scores, turn, bumped) {
@@ -247,7 +318,7 @@
     const order = teams.map((tm, i) => ({ tm, p: scores[i] })).sort((a, b) => b.p - a.p);
     const m = ICG.modal([
       h('div', { class: 'win-top' }, ICG.picture('trophy', 'images/app', 'win-trophy'), winners.length <= 3 ? winners.map(w => T.charImg(w.char, 'right', 'win-char')) : null),
-      h('h2', { style: { fontSize: '80px', margin: '6px 0 10px', color: winners.length > 1 ? 'var(--ink)' : winners[0].color } }, winners.length > 1 ? "It's a tie!" : winners[0].name + ' win!'),
+      h('h2', { style: { fontSize: '80px', margin: '6px 0 10px', color: winners.length > 1 ? 'var(--ink)' : winners[0].color } }, winners.length > 1 ? "It's a tie!" : T.winText(winners[0])),
       h('div', { class: 'ranking', style: ICG.rankCols(order.length) }, order.map((o, k) =>
         h('div', { class: 'rank-row' }, h('b', null, (k + 1) + '.'), T.charImg(o.tm.char, 'right', 'mini'), h('span', null, o.tm.name), h('span', { class: 'rp' }, o.p + (o.p === 1 ? (opts.unit || ' points').replace(/s$/, '') : (opts.unit || ' points')))))),
       h('div', { class: 'row', style: { marginTop: '24px' } },

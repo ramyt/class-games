@@ -632,3 +632,20 @@ div.chip { cursor: default; }
 .win-top .win-char { max-width: 150px; }
 .win-top { flex-wrap: wrap; }
 .db-need { font-size: 28px; font-weight: 700; text-align: center; color: #fff; background: #5b5bd6; border-radius: 14px; padding: 6px 10px; animation: popIn .3s; }
+
+/* ---- 5 to 8 players in the 2-4 games ---- */
+.scoreboard.many { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 6px; }
+.scoreboard.many .sb-row { padding: 0 10px 0 4px; border-width: 3px; border-radius: 14px; min-width: 0; }
+.scoreboard.many .sb-row.turn { transform: none; box-shadow: 0 0 0 4px #ffcc33; }
+.scoreboard.many .sb-char { width: 38px !important; height: 38px !important; }
+.scoreboard.many .sb-name { font-size: 21px !important; }
+.scoreboard.many .sb-score { font-size: 28px !important; min-width: 28px !important; }
+.award-grid.many { grid-template-columns: repeat(2, minmax(0,1fr)) !important; gap: 6px; }
+.award-grid.many > :last-child { grid-column: auto !important; }
+.award-grid.many .award { min-height: 52px !important; font-size: 21px !important; padding: 2px 8px 2px 4px; border-radius: 14px; box-shadow: 0 4px 0 rgba(0,0,0,.2); }
+.award-grid.many .award .mini { width: 34px; height: 34px; }
+.award-grid.many .award b { font-size: 22px; }
+.box-modal .award-grid.many { grid-template-columns: repeat(4, minmax(0,1fr)) !important; }
+.box-modal .award-grid.many .award { min-height: 70px !important; font-size: 25px !important; }
+.wm-panel .award-grid.many .award b, .oo-panel .award-grid.many .award b, .rv-panel .award-grid.many .award b { display: none; }
+.name-btn { cursor: default; }

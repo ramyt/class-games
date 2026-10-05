@@ -37,6 +37,18 @@ addPack({ id: 'pictures', title: 'What is this?', picture: 'camera', text: `
 | a duck | duck
 | a pig | pig
 | a cow | cow
+| a heart | heart
+| a cup | cup
+| a spoon | spoon
+| a hat | top-hat
+| a bag | handbag
+| a lollipop | lollipop
+| a watch | watch
+| a box | box
+| a flower | tulip
+| a baby | baby
+| a candle | candle
+| a boot | boot
 # Harder
 | an octopus | octopus
 | a kangaroo | kangaroo
@@ -62,6 +74,20 @@ addPack({ id: 'pictures', title: 'What is this?', picture: 'camera', text: `
 | a kite | kite
 | a guitar | guitar
 | a crown | crown
+| a microscope | microscope
+| a telescope | telescope
+| an hourglass | hourglass
+| a compass | compass
+| a thermometer | thermometer
+| a trumpet | trumpet
+| a violin | violin
+| a parachute | parachute
+| a skateboard | skateboard
+| a tent | tent
+| an anchor | anchor
+| a hedgehog | hedgehog
+| a flamingo | flamingo
+| a ladder | ladder
 `});
 
 addPack({ id: 'animals', title: 'Animals', picture: 'lion', text: `

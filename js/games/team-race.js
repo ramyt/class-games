@@ -47,7 +47,7 @@
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Game'),
         seg([['race', 'Race'], ['tug', 'Tug of War']], s.mode, v => { s.mode = v; }),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Teams'),
-        s.mode === 'tug' ? h('div', { class: 'small-note' }, '2 teams') : seg([[2, '2'], [3, '3'], [4, '4'], [5, '5'], [6, '6'], [7, '7'], [8, '8']], s.nTeams, v => { s.nTeams = v; })));
+        s.mode === 'tug' ? h('div', { class: 'small-note' }, '2 teams') : T.teamSeg(s.nTeams, v => { s.nTeams = v; save(); render(); })));
       // Row: teams
       const teamBox = T.teamChips(s.teams, s.nTeams, () => { save(); render(); });
       body.append(T.classRow(s.nTeams, s.teams, () => { save(); render(); }));
@@ -89,6 +89,8 @@
      teams that fall behind are out. */
   const SD_ROUNDS = 5;
   function startGame(s) {
+    if (!T.studentsOk()) return;
+    if (s.mode === 'tug' && T.studentMode() && T.studentList().length !== 2) { ICG.toast('Tug of War is for 2 players. Use Race, or play as Teams.'); return; }
     stopClock();
     const teams = T.makeTeams(s.teams, s.nTeams);
     const own = s.packs.includes(OWN);
@@ -402,7 +404,7 @@
       const m = ICG.modal([
         h('div', { class: 'win-top' }, ICG.picture('trophy', 'images/app', 'win-trophy'), ws.length <= 3 ? ws.map(i => charImg(teams[i].char, 'right', 'win-char')) : null),
         h('h2', { style: { fontSize: '84px', margin: '6px 0 10px', color: tie ? 'var(--ink)' : t.color } },
-          tie ? "It's a tie!" : t.name + ' win!'),
+          tie ? "It's a tie!" : T.winText(t)),
         ranking,
         h('div', { class: 'row', style: { marginTop: '26px' } },
           h('button', { class: 'btn big green', onclick: () => { m.close(); startGame(s); } }, 'Play again'),

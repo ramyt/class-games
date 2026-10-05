@@ -73,7 +73,7 @@
     function render() {
       body.innerHTML = '';
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
-        T.seg([[2, '2'], [3, '3'], [4, '4']], s.nTeams, set('nTeams')),
+        T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Rounds'),
         T.seg([[5, '5'], [8, '8'], [10, '10']], s.rounds, set('rounds'))));
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, ''), T.teamChips(s.teams, s.nTeams, () => { save(); render(); })));
@@ -94,6 +94,7 @@
 
   /* ======================= GAME ======================= */
   function startGame(s) {
+    if (!T.studentsOk()) return;
     cleanup();
     const teams = T.makeTeams(s.teams, s.nTeams);
     const rounds = buildRounds(s);
@@ -139,7 +140,7 @@
         panel.append(
           h('div', { class: 'turn-pill', style: { background: t.color } }, T.charImg(t.char, 'right', 'mini'), h('span', null, ICG.possessive(t.name) + ' turn')),
           h('div', { class: 'wm-say' }, 'Which one doesn\'t belong?'),
-          h('div', { class: 'small-note' }, 'Say the letter and the reason. Then the other teams can try.'),
+          h('div', { class: 'small-note' }, 'Say the letter and the reason. Then the others can try.'),
           h('button', { class: 'btn big yellow', style: { marginTop: 'auto' }, onclick: show }, 'Show answer'));
         return;
       }

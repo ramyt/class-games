@@ -57,7 +57,7 @@
     function render() {
       body.innerHTML = '';
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
-        T.seg([[2, '2'], [3, '3'], [4, '4']], s.nTeams, set('nTeams')),
+        T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Time'),
         T.seg([[30, '30s'], [60, '60s'], [90, '90s']], s.time, set('time')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Turns'),
@@ -97,6 +97,7 @@
 
   /* ======================= GAME ======================= */
   function startGame(s) {
+    if (!T.studentsOk()) return;
     cleanup();
     const teams = T.makeTeams(s.teams, s.nTeams);
     let deck = buildDeck(s), di = 0;
@@ -141,7 +142,7 @@
           ICG.picture('chair', 'images/app', 'hs-chair'),
           h('div', { class: 'hs-rules' },
             h('div', null, '1. One player sits in the hot seat, with their back to the TV.'),
-            h('div', null, '2. The team gives clues. Don\'t say the word!'),
+            h('div', null, T.studentMode() ? '2. Everyone else gives clues. Don\'t say the word!' : '2. The team gives clues. Don\'t say the word!'),
             h('div', null, '3. Guess as many words as you can in ' + s.time + ' seconds.'))),
         h('div', { class: 'row hs-btns' },
           t.members && t.members.length ? h('button', { class: 'btn big white', onclick: () => ICG.openWheel(T.wheelOpts(teams, () => st.turn)) }, 'Pick a player') : null,

@@ -44,7 +44,7 @@
     function render() {
       body.innerHTML = '';
       body.append(h('div', { class: 'srow' }, h('div', { class: 'slabel' }, 'Teams'),
-        T.seg([[2, '2'], [3, '3'], [4, '4']], s.nTeams, set('nTeams')),
+        T.teamSeg(s.nTeams, set('nTeams')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Tiles'),
         T.seg([[3, '9'], [4, '16'], [5, '25']], s.grid, set('grid')),
         h('div', { class: 'slabel', style: { width: 'auto', marginLeft: '30px' } }, 'Pictures'),
@@ -78,6 +78,7 @@
 
   /* ======================= GAME ======================= */
   function startGame(s) {
+    if (!T.studentsOk()) return;
     cleanup();
     const teams = T.makeTeams(s.teams, s.nTeams);
     const useQ = s.packs[0] !== NO_Q;
@@ -193,7 +194,7 @@
           h('div', { class: 'rv-help' }, 'Tap a tile to open it. Who is ready to guess?'),
           h('button', { class: 'btn white', onclick: openRandom }, 'Open a random tile'),
           h('div', { class: 'award-box' },
-            h('div', { class: 'award-grid n' + teams.length }, teams.map((tm, i) => {
+            h('div', { class: 'award-grid n' + teams.length + (teams.length > 4 ? ' many' : '') }, teams.map((tm, i) => {
               const wait = st.locked[i] === st.open.length;
               return h('button', { class: 'award' + (wait ? ' waiting' : ''), style: { background: tm.color }, onclick: () => wait ? ICG.toast(tm.name + ' can guess again after the next tile') : guess(i) },
                 T.charImg(tm.char, 'right', 'mini'), h('span', null, wait ? 'Wait...' : tm.name + ' guess'));
